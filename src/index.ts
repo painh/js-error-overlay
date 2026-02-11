@@ -232,6 +232,29 @@ function createContainer(): void {
   document.body.appendChild(container);
 }
 
+// --- Helpers ---
+
+function stringify(val: unknown): string {
+  if (val === null) return 'null';
+  if (val === undefined) return 'undefined';
+  if (typeof val === 'string') return val;
+  if (val instanceof Error) return val.message;
+  if (val instanceof Event) {
+    const target = val.target;
+    let desc = val.type;
+    if (target instanceof HTMLImageElement) desc += ` src=${target.src}`;
+    else if (target instanceof HTMLScriptElement) desc += ` src=${target.src}`;
+    else if (target instanceof HTMLLinkElement) desc += ` href=${target.href}`;
+    else if (target instanceof Element) desc += ` <${target.tagName.toLowerCase()}>`;
+    return desc;
+  }
+  const s = String(val);
+  if (s === '[object Object]') {
+    try { return JSON.stringify(val); } catch { return s; }
+  }
+  return s;
+}
+
 // --- Error hooks ---
 
 function hookErrors(): void {
@@ -265,7 +288,7 @@ function hookErrors(): void {
     addEntry({
       timestamp: new Date(),
       level: 'warn',
-      message: args.map(String).join(' '),
+      message: args.map(stringify).join(' '),
     });
   };
 }
