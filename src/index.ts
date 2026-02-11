@@ -18,6 +18,7 @@ let container: HTMLDivElement | null = null;
 let errorList: HTMLDivElement | null = null;
 let badge: HTMLDivElement | null = null;
 let titleEl: HTMLDivElement | null = null;
+let copyAllBtn: HTMLButtonElement | null = null;
 let entries: ErrorEntry[] = [];
 let isOpen = false;
 
@@ -200,7 +201,7 @@ function createContainer(): void {
   const actions = document.createElement('div');
   actions.className = 'jeo-actions';
 
-  const copyAllBtn = document.createElement('button');
+  copyAllBtn = document.createElement('button');
   copyAllBtn.className = 'jeo-btn';
   copyAllBtn.textContent = 'Copy All';
   copyAllBtn.addEventListener('click', copyAll);
@@ -382,6 +383,10 @@ function formatEntry(entry: ErrorEntry): string {
 function copyAll(): void {
   const text = entries.map(formatEntry).join('\n\n---\n\n');
   navigator.clipboard.writeText(text);
+  if (copyAllBtn) {
+    copyAllBtn.textContent = 'Copied!';
+    setTimeout(() => { if (copyAllBtn) copyAllBtn.textContent = 'Copy All'; }, 1500);
+  }
 }
 
 function clear(): void {
