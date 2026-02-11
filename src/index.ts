@@ -266,7 +266,6 @@ function hookErrors(): void {
       timestamp: new Date(),
       level: 'warn',
       message: args.map(String).join(' '),
-      stack: new Error().stack?.split('\n').slice(2).join('\n'),
     });
   };
 }
